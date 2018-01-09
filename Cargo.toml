@@ -1,0 +1,7 @@
+[package]
+name = "calcver-cli"
+version = "0.1.0"
+authors = ["Jerahmeel Cosinas <me@jerahmeelcosinas.net>"]
+
+[dependencies]
+calcver = "0.1.0-beta.1"
