@@ -5,3 +5,4 @@ authors = ["Jerahmeel Cosinas <me@jerahmeelcosinas.net>"]
 
 [dependencies]
 calcver = "0.1.0-beta.1"
+clap = "2.29.2"
