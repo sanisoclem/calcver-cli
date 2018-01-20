@@ -14,7 +14,19 @@ before_install:
   - set -e
   - sudo apt-get update
 
-script: cargo build
+script: cargo build --release
+
+# deploy:
+#   provider: releases
+#   api_key: "GITHUB OAUTH TOKEN"
+#   file_glob: true
+#   file: target/release/calcver*
+#   skip_cleanup: true
+#   on:
+#     branch: master
+#     tags: true
+#     rust: stable
+
 
 notifications:
   email:
