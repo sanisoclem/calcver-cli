@@ -1,4 +1,4 @@
-use calcver;
+use libcalcver;
 use git2::{Repository};
 use std::collections::HashMap;
 
@@ -7,7 +7,7 @@ pub struct GitRepo {
     commits_since_last_tag: Vec<String>
 }
 
-impl calcver::repository::Repository for GitRepo {
+impl libcalcver::repository::Repository for GitRepo {
     fn get_last_tag(&self) -> Option<&str> {
         match &self.last_tag {
             &Some(ref tag) => Some(tag),

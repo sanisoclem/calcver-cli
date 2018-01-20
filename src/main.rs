@@ -1,11 +1,11 @@
 #[macro_use]
 extern crate clap;
-extern crate calcver;
+extern crate libcalcver;
 extern crate git2;
 
 use clap::{App, Arg};
-use calcver::config::{ProjectConfig};
-use calcver::{VersionBumpBehavior};
+use libcalcver::config::{ProjectConfig};
+use libcalcver::{VersionBumpBehavior};
 
 mod repogit;
 
@@ -49,7 +49,7 @@ fn main() {
     let config = ProjectConfig::from_defaults();
     let is_release = matches.is_present("release");
 
-    let version = calcver::get_version(&config,&repo,VersionBumpBehavior::Auto,is_release).unwrap();
+    let version = libcalcver::get_version(&config,&repo,VersionBumpBehavior::Auto,is_release).unwrap();
 
     if is_release { // && !dryrun {
         println!("Performing release actions...");

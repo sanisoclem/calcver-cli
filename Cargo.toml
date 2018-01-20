@@ -4,6 +4,6 @@ version = "0.1.0"
 authors = ["Jerahmeel Cosinas <me@jerahmeelcosinas.net>","Joelle Ortiz <contact@joelleortiz.me>"]
 
 [dependencies]
-calcver = "0.2.0-beta.1"
+libcalcver = "0.2.0-beta.2"
 clap = "2.29.2"
 git2 = "0.6"
