@@ -8,11 +8,11 @@ use libcalcver::config::{ProjectConfig};
 use libcalcver::{VersionBumpBehavior};
 
 mod repogit;
+mod config;
 
 fn main() {
     let matches = App::new("calcver")
         .version(crate_version!())
-        .author(crate_authors!("\n"))
         .about("Calculate your project's next version")
         .arg(Arg::with_name("repo")
                     .help("Path to the repository")
@@ -21,6 +21,7 @@ fn main() {
         .arg(Arg::with_name("config")
                     .short("c")
                     .long("config")
+                    .default_value(".calcver.yml")
                     .value_name("FILE")
                     .help("Use a config file")
                     .takes_value(true))
