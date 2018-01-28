@@ -1,9 +1,5 @@
 use libcalcver;
-
-pub struct RepositoryConfig {
-    scm_type: String,
-    path: String
-}
+use repo;
 
 pub enum ReleaseConfig {
     FileReplace {
@@ -16,15 +12,14 @@ pub enum ReleaseConfig {
 
 pub struct CalcverConfig {
     pub project: libcalcver::config::ProjectConfig,
-    pub repository: RepositoryConfig,
+    pub repository: repo::RepositoryConfig,
     pub release: Vec<ReleaseConfig>
 }
 
-
-pub fn from_config(config: &str) -> CalcverConfig {
+pub fn from_config(_config: &str) -> CalcverConfig {
     CalcverConfig {
         project: libcalcver::config::ProjectConfig::from_defaults(),
-        repository: RepositoryConfig {
+        repository: repo::RepositoryConfig {
             scm_type: "git".to_string(),
             path: ".".to_string()
         },

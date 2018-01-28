@@ -6,6 +6,7 @@ extern crate git2;
 use clap::{App, Arg};
 use libcalcver::{VersionBumpBehavior};
 
+mod repo;
 mod repogit;
 mod config;
 
@@ -15,10 +16,6 @@ fn main() {
     let matches = App::new("calcver")
         .version(crate_version!())
         .about("Calculate your project's next version")
-        .arg(Arg::with_name("repo")
-                    .help("Path to the repository")
-                    .default_value(".")
-                    .index(1))
         .arg(Arg::with_name("config")
                     .short("c")
                     .long("config")
@@ -39,21 +36,20 @@ fn main() {
 
     // -- get variables
     let config_path = matches.value_of("config").unwrap_or(DEFAULT_CONFIG_NAME);
-    let repo_path = matches.value_of("repo").unwrap_or(".");
     let is_release = matches.is_present("release");
     let is_dryrun = matches.is_present("dryrun");
 
-    let version = run(config_path,repo_path,is_release,is_dryrun);
+    let version = run(config_path,is_release,is_dryrun);
 
     println!("Next version is: {}",version);
 }
 
-fn run(config_path: &str, repo_path: &str, release: bool, dry_run: bool) -> String {
+fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
     // -- parse config if existing
     let config = config::from_config(config_path);
 
     // -- get git repo
-    let repo = repogit::GitRepo::from(repo_path);
+    let repo = config.repository.get_repo::<repogit::GitRepo>();
 
     // -- get the next version
     let version = libcalcver::get_version(&config.project,&repo,VersionBumpBehavior::Auto,release).unwrap();

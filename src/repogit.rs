@@ -1,6 +1,11 @@
 use libcalcver;
 use git2::{Repository};
 use std::collections::HashMap;
+use repo;
+
+trait CreatableRepository {
+    fn from(path: &str) -> Self;
+}
 
 pub struct GitRepo {
     last_tag: Option<String>,
@@ -19,8 +24,8 @@ impl libcalcver::repository::Repository for GitRepo {
     }
 }
 
-impl GitRepo {
-    pub fn from(path: &str) -> GitRepo {
+impl repo::CreatableRepository for GitRepo {
+    fn from(path: &str) -> GitRepo {
         let r = Repository::open(&path).unwrap();
         let tags = r.tag_names(Some("*")).unwrap();
         
