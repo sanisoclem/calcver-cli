@@ -4,11 +4,12 @@ extern crate libcalcver;
 extern crate git2;
 
 use clap::{App, Arg};
-use libcalcver::config::{ProjectConfig};
 use libcalcver::{VersionBumpBehavior};
 
 mod repogit;
 mod config;
+
+static DEFAULT_CONFIG_NAME: &'static str = ".calcver.yml";
 
 fn main() {
     let matches = App::new("calcver")
@@ -21,7 +22,7 @@ fn main() {
         .arg(Arg::with_name("config")
                     .short("c")
                     .long("config")
-                    .default_value(".calcver.yml")
+                    .default_value(DEFAULT_CONFIG_NAME)
                     .value_name("FILE")
                     .help("Use a config file")
                     .takes_value(true))
@@ -36,26 +37,30 @@ fn main() {
         
         .get_matches();
 
-    let repo = match matches.value_of("repo") {
-        Some(path) => repogit::GitRepo::from(path),
-        _ => repogit::GitRepo::from(".")
-    };
-
-    let config_path = match matches.value_of("config") {
-        Some(path)=> path,
-        _=> "calcver.yml"
-    };
-
-    // -- TODO: override with values from config file (if present)
-    let config = ProjectConfig::from_defaults();
+    // -- get variables
+    let config_path = matches.value_of("config").unwrap_or(DEFAULT_CONFIG_NAME);
+    let repo_path = matches.value_of("repo").unwrap_or(".");
     let is_release = matches.is_present("release");
+    let is_dryrun = matches.is_present("dryrun");
 
-    let version = libcalcver::get_version(&config,&repo,VersionBumpBehavior::Auto,is_release).unwrap();
-
-    if is_release { // && !dryrun {
-        println!("Performing release actions...");
-        // TODO: bump, commit, tag
-    }
+    let version = run(config_path,repo_path,is_release,is_dryrun);
 
     println!("Next version is: {}",version);
+}
+
+fn run(config_path: &str, repo_path: &str, release: bool, dry_run: bool) -> String {
+    // -- parse config if existing
+    let config = config::from_config(config_path);
+
+    // -- get git repo
+    let repo = repogit::GitRepo::from(repo_path);
+
+    // -- get the next version
+    let version = libcalcver::get_version(&config.project,&repo,VersionBumpBehavior::Auto,release).unwrap();
+
+    if release { // && !dryrun {
+        
+    }
+
+    version
 }
