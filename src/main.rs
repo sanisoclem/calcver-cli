@@ -2,6 +2,9 @@
 extern crate clap;
 extern crate libcalcver;
 extern crate git2;
+extern crate toml;
+//#[macro_use]
+//extern crate serde_derive;
 
 use clap::{App, Arg};
 use libcalcver::{VersionBumpBehavior};
@@ -9,6 +12,7 @@ use libcalcver::{VersionBumpBehavior};
 mod repo;
 mod repogit;
 mod config;
+mod release;
 
 static DEFAULT_CONFIG_NAME: &'static str = ".calcver.yml";
 
@@ -48,12 +52,22 @@ fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
     // -- parse config if existing
     let config = config::from_config(config_path);
 
-    // -- get git repo
-    let repo = config.repository.get_repo::<repogit::GitRepo>();
+    // -- get repo
+    // -- todo: find some rust way to move this to repo module
+    let repo = match config.repository.scm_type.as_ref() { 
+        "git" => Ok(config.repository.get_repo::<repogit::GitRepo>()),
+        _ => Err("not supported")
+    }.unwrap();
 
     // -- get the next version
     let version = libcalcver::get_version(&config.project,&repo,VersionBumpBehavior::Auto,release).unwrap();
 
+    // -- execute any actions defined
+    for action in config.release.iter() {
+        action.run(&config.repository.path,&version);
+    }
+
+    // -- if releasing, commit and tag
     if release { // && !dryrun {
         
     }

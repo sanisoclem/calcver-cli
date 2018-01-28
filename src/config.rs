@@ -1,19 +1,11 @@
 use libcalcver;
 use repo;
-
-pub enum ReleaseConfig {
-    FileReplace {
-        files: String, //glob
-        replace_match: String, // regex to look for 
-    },
-    CargoToml(String),
-    Csproj(String)
-}
+use release;
 
 pub struct CalcverConfig {
     pub project: libcalcver::config::ProjectConfig,
     pub repository: repo::RepositoryConfig,
-    pub release: Vec<ReleaseConfig>
+    pub release: Vec<release::ReleaseConfig>
 }
 
 pub fn from_config(_config: &str) -> CalcverConfig {
@@ -23,6 +15,6 @@ pub fn from_config(_config: &str) -> CalcverConfig {
             scm_type: "git".to_string(),
             path: ".".to_string()
         },
-        release: vec![ReleaseConfig::CargoToml("cargo.toml".to_string())]
+        release: vec![release::ReleaseConfig::CargoToml("cargo.toml".to_string())]
     }
 }
