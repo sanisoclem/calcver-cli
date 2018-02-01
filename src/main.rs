@@ -3,8 +3,9 @@ extern crate clap;
 extern crate libcalcver;
 extern crate git2;
 extern crate toml;
-//#[macro_use]
-//extern crate serde_derive;
+extern crate serde_yaml;
+#[macro_use]
+extern crate serde_derive;
 
 use clap::{App, Arg};
 use libcalcver::{VersionBumpBehavior};

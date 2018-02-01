@@ -3,7 +3,9 @@ clap = '2.29.2'
 git2 = '0.6'
 glob = '0.2.11'
 libcalcver = '0.2.0-beta.3'
+serde = '1.0'
 serde_derive = '1.0'
+serde_yaml = '0.7'
 toml = '0.4'
 
 [package]
@@ -12,4 +14,4 @@ authors = [
     'Joelle Ortiz <contact@joelleortiz.me>',
 ]
 name = 'calcver'
-version = '0.1.0-alpha.12'
+version = '0.1.0-alpha.14'

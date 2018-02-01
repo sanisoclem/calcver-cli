@@ -1,0 +1,12 @@
+
+# -- uncomment to override defaults
+#root: .
+#repository_type: git
+#prerelease_prefix: alpha
+#tag_regex: \d+\.\d+\.\d+
+#major_regex: "BREAKING CHANGE:"
+#minor_regex: ^feat
+#patch_regex: ^fix
+cargo: .\cargo.toml
+actions:
+  - .\bin\update-version.cmd #dummy update version for testing only
