@@ -5,12 +5,13 @@ pub struct RepositoryConfig {
     pub path: String
 }
 
-pub trait CreatableRepository {
+pub trait CodeRepository {
     fn from(path: &str) -> Self;
+    fn commit(&self, tag: &str);
 }
 
 impl RepositoryConfig {
-    pub fn get_repo <T: libcalcver::repository::Repository + CreatableRepository>(&self) -> T {
+    pub fn get_repo <T: libcalcver::repository::Repository + CodeRepository>(&self) -> T {
         T::from(&self.path)
     }
 }

@@ -14,6 +14,8 @@ mod repogit;
 mod config;
 mod release;
 
+use repo::{CodeRepository};
+
 static DEFAULT_CONFIG_NAME: &'static str = ".calcver.yml";
 
 fn main() {
@@ -54,7 +56,7 @@ fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
 
     // -- get repo
     // -- todo: find some rust way to move this to repo module
-    let repo = match config.repository.scm_type.as_ref() { 
+    let repo  = match config.repository.scm_type.as_ref() { 
         "git" => Ok(config.repository.get_repo::<repogit::GitRepo>()),
         _ => Err("not supported")
     }.unwrap();
@@ -69,7 +71,7 @@ fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
 
     // -- if releasing, commit and tag
     if release { // && !dryrun {
-        
+        repo.commit(&version);
     }
 
     version

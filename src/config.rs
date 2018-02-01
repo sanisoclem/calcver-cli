@@ -8,6 +8,7 @@ pub struct CalcverConfig {
     pub release: Vec<release::ReleaseConfig>
 }
 
+// -- hard coded for now
 pub fn from_config(_config: &str) -> CalcverConfig {
     CalcverConfig {
         project: libcalcver::config::ProjectConfig::from_defaults(),
@@ -15,6 +16,9 @@ pub fn from_config(_config: &str) -> CalcverConfig {
             scm_type: "git".to_string(),
             path: ".".to_string()
         },
-        release: vec![release::ReleaseConfig::CargoToml("cargo.toml".to_string())]
+        release: vec![
+            release::ReleaseConfig::CargoToml("cargo.toml".to_string()),
+            release::ReleaseConfig::RunScript(".\\bin\\update-version.cmd".to_string()) 
+        ]
     }
 }

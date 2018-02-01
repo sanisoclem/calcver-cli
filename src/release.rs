@@ -1,15 +1,13 @@
 use toml;
+use std;
+use std::process::Command;
 use std::path::{Path};
 use toml::Value;
 use std::io::prelude::*;
-use std::fs::File;
-
+use std::fs::{File,OpenOptions};
 
 pub enum ReleaseConfig {
-    FileReplace {
-        files: String, //glob
-        replace_match: String, // regex to look for 
-    },
+    RunScript(String),
     CargoToml(String)
 }
 
@@ -17,29 +15,63 @@ impl ReleaseConfig {
     pub fn run(&self, path: &str, version: &str) {
         match self { 
             &ReleaseConfig::CargoToml(ref cargo_path) => {
+                // -- get path
                 let full_path = Path::new(path).join(cargo_path);
-                let mut f = File::open(full_path).unwrap();
+
                 let mut buffer = String::new();
-                f.read_to_string(&mut buffer).unwrap();
-                let newtoml = update_toml(&buffer,version);
-                f.write(newtoml.as_bytes()).unwrap();
+                {
+                    let mut f = File::open(&full_path).unwrap();
+                    f.read_to_string(&mut buffer).unwrap();
+                }
+                {
+                    let (old_version,newtoml) = update_toml(&buffer,version);
+                    let mut file = OpenOptions::new().write(true).truncate(true).open(&full_path).unwrap();
+                    file.write_all(newtoml.as_bytes()).unwrap();
+                    println!("Patched '{}'\nOld version: {}\nNew version: {}",full_path.to_str().unwrap(),old_version,version);
+                }
             },
-            _fr @ &ReleaseConfig::FileReplace { .. } => {
-                
+            &ReleaseConfig::RunScript (ref script) => {
+                let output = run_command(script,version);
+                // -- todo: merge???
+                if output.stderr.len() > 0 {
+                    println!("{}",std::str::from_utf8(&output.stderr).unwrap());
+                }
+                if output.stdout.len() > 0 {
+                    println!("{}",std::str::from_utf8(&output.stdout).unwrap());
+                }
+                println!("'{}' exited with code: {}",script,output.status.code().unwrap())
             }
         };
     }
 }
 
-fn update_toml(toml: &str,version: &str) -> String {
+fn update_toml(toml: &str,version: &str) -> (String,String) {
+    let old;
     let mut val: Value = toml.parse::<Value>().unwrap(); {
         let table = val.as_table_mut().unwrap();
         let pkg  = table.get_mut("package").unwrap().as_table_mut().unwrap();
         let v = pkg.get_mut("version").unwrap();
+        old = v.as_str().unwrap().to_owned();
         let newv = String::from(version);
         *v = Value::String(newv);
     }
-    toml::to_string_pretty(&val).unwrap()
+    (old,toml::to_string_pretty(&val).unwrap())
+}
+
+fn run_command(cmd: &str,version: &str) -> std::process::Output {
+    if cfg!(target_os = "windows") {
+    Command::new("cmd")
+            .env("CALCVER_VERSION", version)
+            .args(&["/C", cmd])
+            .output()
+            .expect("failed to execute process")
+    } else {
+    Command::new("sh")
+            .arg("-c")
+            .arg(cmd)
+            .output()
+            .expect("failed to execute process")
+    }
 }
 
 
