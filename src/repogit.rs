@@ -1,8 +1,10 @@
 use libcalcver;
 use git2::{Repository};
 use std::collections::HashMap;
+use repo;
 
 pub struct GitRepo {
+    path: String,
     last_tag: Option<String>,
     commits_since_last_tag: Vec<String>
 }
@@ -19,8 +21,12 @@ impl libcalcver::repository::Repository for GitRepo {
     }
 }
 
-impl GitRepo {
-    pub fn from(path: &str) -> GitRepo {
+impl repo::CodeRepository for GitRepo {
+    fn commit(&self, _tag: &str) {
+        Repository::open(&self.path).unwrap();
+        //panic!("not implemented");
+    }
+    fn from(path: &str) -> GitRepo {
         let r = Repository::open(&path).unwrap();
         let tags = r.tag_names(Some("*")).unwrap();
         
@@ -58,6 +64,7 @@ impl GitRepo {
         }
 
         GitRepo {
+            path: path.to_owned(),
             last_tag: tag,
             commits_since_last_tag: commits
         }
