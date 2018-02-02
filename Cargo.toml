@@ -1,12 +1,23 @@
+[[bin]]
+name = 'calcver'
+path = 'src/bin.rs'
+
 [dependencies]
 clap = '2.29.2'
 git2 = '0.6'
 glob = '0.2.11'
 libcalcver = '0.2.0-beta.3'
+quick-error = '^1.0.0'
+regex = '0.2'
+semver = '0.9.0'
 serde = '1.0'
 serde_derive = '1.0'
 serde_yaml = '0.7'
 toml = '0.4'
+
+[lib]
+name = 'calcver'
+path = 'src/lib.rs'
 
 [package]
 authors = [
@@ -15,7 +26,7 @@ authors = [
 ]
 description = 'auto calculation of version based on http://conventionalcommits.org'
 documentation = 'https://github.com/easy-semver/calcver-cli'
+license = 'Apache-2.0'
 name = 'calcver'
 repository = 'https://github.com/easy-semver/calcver-cli'
-version = '0.1.0-alpha.22'
-license = "Apache-2.0"
+version = '0.1.0-alpha.26'

@@ -1,7 +1,6 @@
-use libcalcver;
 use git2::{Repository};
 use std::collections::HashMap;
-use repo;
+use repository;
 
 pub struct GitRepo {
     path: String,
@@ -9,23 +8,25 @@ pub struct GitRepo {
     commits_since_last_tag: Vec<String>
 }
 
-impl libcalcver::repository::Repository for GitRepo {
+impl repository::CodeRepository for GitRepo {
     fn get_last_tag(&self) -> Option<&str> {
         match &self.last_tag {
             &Some(ref tag) => Some(tag),
             &None=>None
         }
     }
+
     fn get_commits_since_last_tag(&self) -> &Vec<String> {
         &self.commits_since_last_tag
     }
-}
 
-impl repo::CodeRepository for GitRepo {
     fn commit(&self, _tag: &str) {
         Repository::open(&self.path).unwrap();
         //panic!("not implemented");
     }
+}
+
+impl repository::FileSystemRepository for GitRepo {
     fn from(path: &str) -> GitRepo {
         let r = Repository::open(&path).unwrap();
         let tags = r.tag_names(Some("*")).unwrap();
