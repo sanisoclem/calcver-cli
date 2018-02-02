@@ -51,7 +51,7 @@ fn main() {
     println!("Next version is: {}",version);
 }
 
-fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
+pub fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
     // -- parse config if existing
     let config = config::from_config(config_path);
 
