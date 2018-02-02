@@ -13,5 +13,8 @@ authors = [
     'Jerahmeel Cosinas <me@jerahmeelcosinas.net>',
     'Joelle Ortiz <contact@joelleortiz.me>',
 ]
+description = "auto calculation of version based on http://conventionalcommits.org"
+documentation = "https://github.com/easy-semver/calcver-cli"
 name = 'calcver'
-version = '0.1.0-alpha.14'
+repository = "https://github.com/easy-semver/calcver-cli"
+version = '0.1.0-alpha.15'
