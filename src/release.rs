@@ -27,7 +27,7 @@ impl ReleaseConfig {
                     let (old_version,newtoml) = update_toml(&buffer,version);
                     let mut file = OpenOptions::new().write(true).truncate(true).open(&full_path).unwrap();
                     file.write_all(newtoml.as_bytes()).unwrap();
-                    println!("Patched '{}'\nOld version: {}\nNew version: {}",full_path.to_str().unwrap(),old_version,version);
+                    println!("Patched '{}': {} => {}",full_path.to_str().unwrap(),old_version,version);
                 }
             },
             &ReleaseConfig::RunScript (ref script) => {
@@ -94,7 +94,8 @@ git2 = "0.6"
 toml = "0.4"
 serde_derive = "1.0"
 "###;
-        let parsed = update_toml(toml, "1.2.3").parse::<Value>().unwrap();
+        let (_,updated) = update_toml(toml, "1.2.3");
+        let parsed = updated.parse::<Value>().unwrap();
         let updated = parsed.as_table().unwrap()
             .get("package").unwrap().as_table().unwrap()
             .get("version").unwrap().as_str().unwrap();
