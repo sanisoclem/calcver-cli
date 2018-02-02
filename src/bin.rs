@@ -21,8 +21,6 @@ mod release;
 mod version;
 mod error;
 
-use repository::{CodeRepository};
-
 static DEFAULT_CONFIG_NAME: &'static str = ".calcver.yml";
 
 fn main() {
@@ -52,34 +50,7 @@ fn main() {
     let is_release = matches.is_present("release");
     let is_dryrun = matches.is_present("dryrun");
 
-    let version = run(config_path,is_release,is_dryrun);
+    let version = version::run(config_path,is_release,is_dryrun);
 
     println!("Next version is: {}",version);
-}
-
-pub fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
-    // -- parse config if existing
-    let config = config_file::from_config(config_path);
-
-    // -- get repo
-    // -- todo: find some rust way to move this to repo module
-    let repo  = match config.repository.scm_type.as_ref() { 
-        "git" => Ok(config.repository.get_repo::<repogit::GitRepo>()),
-        _ => Err("not supported")
-    }.unwrap();
-
-    // -- get the next version
-    let version = version::get_version(&config.project,&repo,version::VersionBumpBehavior::Auto,release).unwrap();
-
-    // -- execute any actions defined
-    for action in config.release.iter() {
-        action.run(&config.repository.path,&version);
-    }
-
-    // -- if releasing, commit and tag
-    if release { // && !dryrun {
-        repo.commit(&version);
-    }
-
-    version
 }

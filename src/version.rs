@@ -3,6 +3,8 @@ use error;
 use regex::{RegexSet,Regex};
 use semver;
 
+use repository::{CodeRepository};
+
 #[derive(PartialEq)]
 pub enum VersionBumpBehavior {
     None,
@@ -11,6 +13,33 @@ pub enum VersionBumpBehavior {
     Minor,
     Patch,
 }
+
+pub fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
+    // -- parse config if existing
+    let config = config_file::from_config(config_path);
+
+    // -- get repo
+    // -- todo: find some rust way to move this to repo module
+    let repo  = match config.repository.scm_type.as_ref() { 
+        "git" => Ok(config.repository.get_repo::<repogit::GitRepo>()),
+        _ => Err("not supported")
+    }.unwrap();
+
+    // -- get the next version
+    let version = version::get_version(&config.project,&repo,VersionBumpBehavior::Auto,release).unwrap();
+
+    // -- execute any actions defined
+    for action in config.release.iter() {
+        action.run(&config.repository.path,&version);
+    }
+
+    // -- if releasing, commit and tag
+    if release { // && !dryrun {
+        repo.commit(&version);
+    }
+    version
+}
+
 
 pub fn get_version(config:  &config::VersionConfig,repo: &repository::CodeRepository,  bump_behavior: VersionBumpBehavior, release: bool) -> Result<String,error::CalcverError> {
     let commits = repo.get_commits_since_last_tag();

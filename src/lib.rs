@@ -1,14 +1,19 @@
-
+extern crate git2;
+extern crate toml;
+extern crate serde_yaml;
+#[macro_use]
+extern crate serde_derive;
 #[macro_use(quick_error)]
 extern crate quick_error;
 extern crate regex;
 extern crate semver;
-extern crate toml;
 
 pub mod config;
 pub mod error;
 pub mod repository;
 pub mod release;
+pub mod config_file;
+pub mod repogit;
 mod version;
 
 pub use version::*;
