@@ -5,7 +5,7 @@ cache: cargo
 stages:
   - test
   - name: deploy
-    if: branch = master AND type IN (push)
+    if: (branch = master AND type IN (push)) OR tag =~ ^v*
 
 rust:
   - stable
