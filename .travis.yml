@@ -25,7 +25,7 @@ script: cargo test
 jobs:
   include:
     - stage: deploy
-      script: cargo login $CARGO_API_KEY cargo run --release && cargo package && cargo publish
+      script: cargo login $CARGO_API_KEY && cargo run --release && cargo package && cargo publish
       rust: stable
 
 addons:
