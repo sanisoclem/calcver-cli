@@ -7,6 +7,6 @@
 #major_regex: "BREAKING CHANGE:"
 #minor_regex: ^feat
 #patch_regex: ^fix
-cargo: .\cargo.toml
+cargo: .\Cargo.toml
 #actions:
 #  - .\bin\update-version.cmd #dummy update version for testing only
