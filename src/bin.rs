@@ -1,21 +1,27 @@
 #[macro_use]
 extern crate clap;
-extern crate libcalcver;
 extern crate git2;
 extern crate toml;
 extern crate serde_yaml;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use(quick_error)]
+extern crate quick_error;
+extern crate regex;
+extern crate semver;
+
 
 use clap::{App, Arg};
-use libcalcver::{VersionBumpBehavior};
 
-mod repo;
+mod repository;
 mod repogit;
+mod config_file;
 mod config;
 mod release;
+mod version;
+mod error;
 
-use repo::{CodeRepository};
+use repository::{CodeRepository};
 
 static DEFAULT_CONFIG_NAME: &'static str = ".calcver.yml";
 
@@ -53,7 +59,7 @@ fn main() {
 
 pub fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
     // -- parse config if existing
-    let config = config::from_config(config_path);
+    let config = config_file::from_config(config_path);
 
     // -- get repo
     // -- todo: find some rust way to move this to repo module
@@ -63,7 +69,7 @@ pub fn run(config_path: &str, release: bool, _dry_run: bool) -> String {
     }.unwrap();
 
     // -- get the next version
-    let version = libcalcver::get_version(&config.project,&repo,VersionBumpBehavior::Auto,release).unwrap();
+    let version = version::get_version(&config.project,&repo,version::VersionBumpBehavior::Auto,release).unwrap();
 
     // -- execute any actions defined
     for action in config.release.iter() {
