@@ -22,11 +22,11 @@ before_install:
 
 script: cargo test
 
-jobs:
-  include:
-    - stage: deploy
-      script: cargo login $CARGO_API_KEY && cargo run --release && cargo package --allow-dirty && cargo publish --allow-dirty 
-      rust: stable
+# jobs:
+#   include:
+#     - stage: deploy
+#       script: cargo login $CARGO_API_KEY && cargo run --release && cargo package --allow-dirty && cargo publish --allow-dirty
+#       rust: stable
 
 addons:
   apt:
