@@ -23,8 +23,14 @@ authors = [
     'Joelle Ortiz <contact@joelleortiz.me>',
 ]
 description = 'auto calculation of version based on http://conventionalcommits.org'
-documentation = 'https://github.com/easy-semver/calcver-cli'
+documentation = 'https://github.com/sanisoclem/calcver-cli'
 license = 'Apache-2.0'
 name = 'calcver'
-repository = 'https://github.com/easy-semver/calcver-cli'
+repository = 'https://github.com/sanisoclem/calcver-cli'
 version = '0.1.0-alpha.26'
+
+
+[badges]
+travis-ci = { repository = "sanisoclem/calcver-cli" }
+codecov = { repository = "sanisoclem/calcver-cli" }
+maintenance = { status = "actively-developed" }

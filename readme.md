@@ -2,8 +2,8 @@
 
 [![Crates.io](https://img.shields.io/crates/v/calcver.svg)](https://crates.io/crates/calcver)
 [![Crates.io](https://img.shields.io/crates/d/calcver.svg)](https://crates.io/crates/calcver)
-[![Build Status](https://travis-ci.org/easy-semver/calcver-cli.svg?branch=master)](https://travis-ci.org/easy-semver/calcver-cli)
-[![codecov](https://codecov.io/gh/easy-semver/calcver-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/easy-semver/calcver-cli)
+[![Build Status](https://travis-ci.org/sanisoclem/calcver-cli.svg?branch=master)](https://travis-ci.org/sanisoclem/calcver-cli)
+[![codecov](https://codecov.io/gh/sanisoclem/calcver-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/sanisoclem/calcver-cli)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 :poop: *Work in progress*
